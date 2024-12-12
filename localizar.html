@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocalização</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Obter Localização</h1>
+    <button id="getLocation">Mostrar Localização</button>
+    <div id="output">
+        <p>Clique no botão para obter a localização.</p>
+    </div>
+
+    <script>
+        const button = document.getElementById('getLocation');
+        const output = document.getElementById('output');
+
+        button.addEventListener('click', () => {
+            // Verifica se o navegador suporta geolocalização
+            if (navigator.geolocation) {
+                output.innerHTML = "Obtendo localização...";
+
+                // Obtém a localização atual
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        output.innerHTML = `
+                            <p><strong>Latitude:</strong> ${latitude}</p>
+                            <p><strong>Longitude:</strong> ${longitude}</p>
+                        `;
+                    },
+                    (error) => {
+                        // Tratamento de erros
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                output.innerHTML = "Permissão de localização negada.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                output.innerHTML = "Informações de localização não disponíveis.";
+                                break;
+                            case error.TIMEOUT:
+                                output.innerHTML = "O tempo para obter a localização expirou.";
+                                break;
+                            default:
+                                output.innerHTML = "Ocorreu um erro desconhecido.";
+                                break;
+                        }
+                    }
+                );
+            } else {
+                output.innerHTML = "Geolocalização não é suportada pelo seu navegador.";
+            }
+        });
+    </script>
+</body>
+</html>
